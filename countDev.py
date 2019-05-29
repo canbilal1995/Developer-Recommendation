@@ -12,7 +12,7 @@ with open('Results/collected_data.csv', 'r') as collected_data:
             continue
         else:
             count_line += 1
-            key = row[1]
+            key = row[2]
             if key in dev_dict:
                 dev_dict[key] += 1
             else:
