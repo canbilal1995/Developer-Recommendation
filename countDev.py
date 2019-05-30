@@ -1,6 +1,7 @@
 #@Author: Bilal CAN
 
 import csv
+import matplotlib.pylab as plt
 
 dev_dict ={}
 with open('Results/collected_data.csv', 'r') as collected_data:
@@ -52,3 +53,24 @@ with open('Results/developer_number.csv', 'w', newline='') as dev_num_csv:
     writer.writerow(fieldnames)
     for key in dev_dict:
         writer.writerow((key, dev_dict[key]))
+
+
+list_to_plot = sorted(dev_dict.items())#dictionary changed to a list of tuples
+x, y = zip(*list_to_plot) #unpack the list
+plt.figure(1)
+plt.xlabel('Developers')
+plt.ylabel('Number of fixes')
+plt.title('Histogram for Developers')
+plt.plot(x, y)
+plt.savefig('Results/histogram01.png')
+plt.show()
+
+list_to_plot = sorted(dev_dict.items(), key=lambda a : a[1])#dictionary changed to a list of tuples
+x, y = zip(*list_to_plot) #unpack the list
+plt.figure(2)
+plt.xlabel('Developers')
+plt.ylabel('Number of fixes')
+plt.title('Histogram for Developers')
+plt.plot(x, y)
+plt.savefig('Results/histogram02.png')
+plt.show()
