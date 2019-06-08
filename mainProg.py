@@ -32,4 +32,6 @@ for element in range(len(texts)):
     for word in range(len(texts[element])):
         texts[element][word] = texts[element][word].lower()
         sub_tokens += tokenizer.tokenize(texts[element][word])
-    tokens += [sub_tokens]
+        stopped_sub_tokens = [i for i in sub_tokens if not i in en_stop]
+        stemmed_sub_tokens = [p_stemmer.stem(i) for i in stopped_sub_tokens]
+    tokens += [stemmed_sub_tokens]
