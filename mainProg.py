@@ -31,7 +31,7 @@ for element in range(len(texts)):
     sub_tokens = []
     for word in range(len(texts[element])):
         texts[element][word] = texts[element][word].lower()
-        sub_tokens += tokenizer.tokenize(texts[element][word])
-        stopped_sub_tokens = [i for i in sub_tokens if not i in en_stop]
-        stemmed_sub_tokens = [p_stemmer.stem(i) for i in stopped_sub_tokens]
+        sub_tokens += tokenizer.tokenize(texts[element][word]) #atomic words are gathered from each word
+        stopped_sub_tokens = [i for i in sub_tokens if not i in en_stop] #stopwords are discarded
+        stemmed_sub_tokens = [p_stemmer.stem(i) for i in stopped_sub_tokens] #stemming
     tokens += [stemmed_sub_tokens]
