@@ -21,7 +21,15 @@ with open('Results/collected_data.csv', 'r') as collected_data:
         else:
             count_line += 1
             texts += [row[3].strip().split()]
-
+            
+en_stop = set(stopwords.words('english')) #stopwords
+# en_stop += [] #after the first run of LDA and LSA words with too high frequencies are eliminated
+p_stemmer = PorterStemmer()
+tokenizer = RegexpTokenizer(r'\w+')
+tokens = []
 for element in range(len(texts)):
+    sub_tokens = []
     for word in range(len(texts[element])):
         texts[element][word] = texts[element][word].lower()
+        sub_tokens += tokenizer.tokenize(texts[element][word])
+    tokens += [sub_tokens]
