@@ -2,6 +2,7 @@
 
 import csv
 import os.path
+from gensim.models import LdaModel, LdaMulticore
 from gensim import corpora
 from gensim.models import LsiModel
 from gensim.models.coherencemodel import CoherenceModel
@@ -35,3 +36,21 @@ for element in range(len(texts)):
         stopped_sub_tokens = [i for i in sub_tokens if not i in en_stop] #stopwords are discarded
         stemmed_sub_tokens = [p_stemmer.stem(i) for i in stopped_sub_tokens] #stemming
     tokens += [stemmed_sub_tokens]
+
+dict_of_tokens = corpora.Dictionary() #Dictionary object is created
+corpus_of_tokens = [dict_of_tokens.doc2bow(doc, allow_update = True) for doc in tokens] #corpus is created
+lda_model = LdaMulticore(corpus = corpus_of_tokens,
+                         id2word = dict_of_tokens,
+                         random_state = 100,
+                         num_topics = 10,
+                         chunksize = 1000,
+                         batch = False,
+                         alpha = 'asymmetric',
+                         decay = 0.5,
+                         offset = 64,
+                         eta = None,
+                         eval_every = 0,
+                         iterations = 100,
+                         gamma_threshold = 0.001,
+                         per_word_topics = True)
+lda_model.save('Results/lda_model.model')
