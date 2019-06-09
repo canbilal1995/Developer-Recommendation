@@ -1,8 +1,8 @@
 #@Author: Bilal CAN
 
 import csv
-import os.path
-from gensim.models import LdaModel, LdaMulticore
+import os
+from gensim.models import LdaModel, LdaMulticore, LsiModel
 from gensim import corpora
 from gensim.models import LsiModel
 from gensim.models.coherencemodel import CoherenceModel
@@ -39,18 +39,32 @@ for element in range(len(texts)):
 
 dict_of_tokens = corpora.Dictionary() #Dictionary object is created
 corpus_of_tokens = [dict_of_tokens.doc2bow(doc, allow_update = True) for doc in tokens] #corpus is created
-lda_model = LdaMulticore(corpus = corpus_of_tokens,
-                         id2word = dict_of_tokens,
-                         random_state = 100,
-                         num_topics = 10,
-                         chunksize = 1000,
-                         batch = False,
-                         alpha = 'asymmetric',
-                         decay = 0.5,
-                         offset = 64,
-                         eta = None,
-                         eval_every = 0,
-                         iterations = 100,
-                         gamma_threshold = 0.001,
-                         per_word_topics = True)
-lda_model.save('Results/lda_model.model')
+
+if not os.path.exists('TopicModelling'):
+    os.makedirs('TopicModelling')
+dict_of_tokens.save('TopicModelling/myDict.dict')
+corpora.MmCorpus.serialize('TopicModelling/myCorpus.mm', corpus_of_tokens) 
+
+#lda_model = LdaMulticore(corpus = corpus_of_tokens,
+#                         id2word = dict_of_tokens,
+#                         random_state = 100,
+#                         num_topics = 10,
+#                         chunksize = 1000,
+#                         batch = False,
+#                         alpha = 'asymmetric',
+#                         decay = 0.5,
+#                         offset = 64,
+#                         eta = None,
+#                         eval_every = 0,
+#                         iterations = 10,
+#                         gamma_threshold = 0.001,
+#                         per_word_topics = True,
+#                         passes = 2,
+#                         workers = 2)
+#lda_model.save('TopicModelling/lda_model.model')
+
+lsa_model = LsiModel(corpus = corpus_of_tokens,
+                     id2word = dict_of_tokens,
+                     num_topics = 10,
+                     decay = 0.5)
+lsa_model.save('TopicModelling/lsa_model.model')
