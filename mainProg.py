@@ -45,26 +45,25 @@ if not os.path.exists('TopicModelling'):
 dict_of_tokens.save('TopicModelling/myDict.dict')
 corpora.MmCorpus.serialize('TopicModelling/myCorpus.mm', corpus_of_tokens) 
 
-#lda_model = LdaMulticore(corpus = corpus_of_tokens,
-#                         id2word = dict_of_tokens,
-#                         random_state = 100,
-#                         num_topics = 10,
-#                         chunksize = 1000,
-#                         batch = False,
-#                         alpha = 'asymmetric',
-#                         decay = 0.5,
-#                         offset = 64,
-#                         eta = None,
-#                         eval_every = 0,
-#                         iterations = 10,
-#                         gamma_threshold = 0.001,
-#                         per_word_topics = True,
-#                         passes = 2,
-#                         workers = 2)
-#lda_model.save('TopicModelling/lda_model.model')
+lda_model = LdaModel(corpus = corpus_of_tokens,
+                     id2word = dict_of_tokens,
+                     num_topics = 10,
+                     iterations = 10,
+                     passes = 5,
+                     decay = 0.5)
+lda_model.save('TopicModelling/lda_model.model')
+print(lda_model.print_topics())
 
 lsa_model = LsiModel(corpus = corpus_of_tokens,
                      id2word = dict_of_tokens,
                      num_topics = 10,
                      decay = 0.5)
+print(lsa_model.print_topics())
 lsa_model.save('TopicModelling/lsa_model.model')
+
+coherence_model = CoherenceModel(model = lsa_model,
+                                corpus = corpus_of_tokens,
+                                texts = tokens,
+                                dictionary = dict_of_tokens,
+                               coherence = 'c_v')
+
