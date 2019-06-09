@@ -23,6 +23,18 @@ if __name__ == "__main__":
             else:
                count_line += 1
                texts += [row[3].strip().split()]
+    counter_dict = {}
+    for element in range(len(texts)):
+        for word in range(len(texts[element])):
+            texts[element][word] = texts[element][word].lower()
+            if texts[element][word] in counter_dict:
+                counter_dict[texts[element][word]] += 1
+            else:
+                counter_dict[texts[element][word]] = 1
+    word_freq_list = sorted(counter_dict.items(), key=lambda a : a[1], reverse=True)
+    with open('Results/word_freq.txt', 'w') as word_freq_txt:
+        for word in word_freq_list:
+            print("{}\t{}".format(word[0], word[1]), file = word_freq_txt, flush = True)
             
     en_stop = set(stopwords.words('english')) #stopwords
 # en_stop += [] #after the first run of LDA and LSA words with too high frequencies are eliminated
@@ -32,7 +44,6 @@ if __name__ == "__main__":
     for element in range(len(texts)):
         sub_tokens = []
         for word in range(len(texts[element])):
-            texts[element][word] = texts[element][word].lower()
             sub_tokens += tokenizer.tokenize(texts[element][word]) #atomic words are gathered from each word
             stopped_sub_tokens = [i for i in sub_tokens if not i in en_stop] #stopwords are discarded
             stemmed_sub_tokens = [p_stemmer.stem(i) for i in stopped_sub_tokens] #stemming
@@ -48,7 +59,7 @@ if __name__ == "__main__":
 
     lda_model = LdaModel(corpus = corpus_of_tokens,
                      id2word = dict_of_tokens,
-                        num_topics = 10,
+                     num_topics = 10,
                      iterations = 10,
                      passes = 5,
                      decay = 0.5)
