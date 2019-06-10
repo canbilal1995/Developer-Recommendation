@@ -37,7 +37,9 @@ if __name__ == "__main__":
             print("{}\t{}".format(word[0], word[1]), file = word_freq_txt, flush = True)
             
     en_stop = set(stopwords.words('english')) #stopwords
-# en_stop += [] #after the first run of LDA and LSA words with too high frequencies are eliminated
+    en_stop.add('eclipse')
+    en_stop.add('error')
+    en_stop.add('project')
     p_stemmer = PorterStemmer()
     tokenizer = RegexpTokenizer(r'\w+')
     tokens = []
@@ -55,31 +57,41 @@ if __name__ == "__main__":
     if not os.path.exists('TopicModelling'):
         os.makedirs('TopicModelling')
     dict_of_tokens.save('TopicModelling/myDict.dict')
-    corpora.MmCorpus.serialize('TopicModelling/myCorpus.mm', corpus_of_tokens) 
+    corpora.MmCorpus.serialize('TopicModelling/myCorpus.mm', corpus_of_tokens)
 
-    lda_model = LdaModel(corpus = corpus_of_tokens,
-                     id2word = dict_of_tokens,
-                     num_topics = 10,
-                     iterations = 10,
-                     passes = 5,
-                     decay = 0.5)
-    lda_model.save('TopicModelling/lda_model.model')
-    print(lda_model.print_topics())
+    best_lda_model = []
+    best_lsa_model = []
+    for top_num in range(2,101):
+        lda_model = LdaModel(corpus = corpus_of_tokens,
+                             id2word = dict_of_tokens,
+                             num_topics = top_num,
+                             iterations = 50,
+                             passes = 5,
+                             decay = 0.5)
+        #lda_model.save('TopicModelling/lda_model.model')
+        #print(lda_model.print_topics())
 
-    lsa_model = LsiModel(corpus = corpus_of_tokens,
-                     id2word = dict_of_tokens,
-                     num_topics = 10,
-                     decay = 0.5)
-    print(lsa_model.print_topics())
-    lsa_model.save('TopicModelling/lsa_model.model')
-    lda_coherence = CoherenceModel(model = lda_model,
-                               corpus = corpus_of_tokens,
-                               texts = tokens,
-                               dictionary = dict_of_tokens,
-                               coherence = 'c_v').get_coherence()
+        lsa_model = LsiModel(corpus = corpus_of_tokens,
+                             id2word = dict_of_tokens,
+                             num_topics = top_num,
+                             decay = 0.5)
+        #print(lsa_model.print_topics())
+        #lsa_model.save('TopicModelling/lsa_model.model')
+        lda_coherence = CoherenceModel(model = lda_model,
+                                       corpus = corpus_of_tokens,
+                                       texts = tokens,
+                                       dictionary = dict_of_tokens,
+                                       coherence = 'c_v').get_coherence()
 
-    lsa_coherence = CoherenceModel(model = lsa_model,
-                               corpus = corpus_of_tokens,
-                               texts = tokens,
-                               dictionary = dict_of_tokens,
-                               coherence = 'c_v').get_coherence()
+        lsa_coherence = CoherenceModel(model = lsa_model,
+                                       corpus = corpus_of_tokens,
+                                       texts = tokens,
+                                       dictionary = dict_of_tokens,
+                                       coherence = 'c_v').get_coherence()
+        best_lda_model.append((top_num, lda_coherence, lda_model))
+        best_lsa_model.append((top_num, lsa_coherence, lsa_model))
+    with open('TopicModelling/trainingtests.txt', 'w') as toWrite:
+        print('LDA', file = toWrite, flush = True)
+        print(*best_lda_model, file = toWrite, flush = True, sep = "\n")
+        print('LSA', file = toWrite, flush = True)
+        print(*best_lsa_model, file = toWrite, flush = True, sep = "\n")
