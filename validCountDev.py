@@ -1,7 +1,6 @@
 #@Author: Bilal CAN
 
 import csv
-import matplotlib.pylab as plt
 
 dev_dict ={}
 with open('Results/arranged_data.csv', 'r') as arranged_data:
@@ -29,3 +28,15 @@ with open('Results/arranged_data.csv', 'r') as arranged_data:
                     1
                     ]
                 (dev_dict[key1])[0][key2] += 1
+
+with open('Results/arranged_dev_num.csv', 'w', newline='') as toWrite:
+    writer = csv.writer(toWrite, delimiter='\t')
+    writer.writerow(('developer', '2006', '2007', '2008', '2009', '2010', '2011'))
+    for key in dev_dict:
+        writer.writerow((key,
+                         dev_dict[key][0]['2006'],
+                         dev_dict[key][0]['2007'],
+                         dev_dict[key][0]['2008'],
+                         dev_dict[key][0]['2009'],
+                         dev_dict[key][0]['2010'],
+                         dev_dict[key][0]['2011']))
