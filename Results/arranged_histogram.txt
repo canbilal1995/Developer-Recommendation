@@ -1,0 +1,15 @@
+The number of developers: 253
+The total number of works: 20248
+Developers according to works:
+up to 10: 118
+11-25   : 38
+26-50   : 19
+50-75   : 10
+75-100  : 9
+100-150 : 19
+150-200 : 7
+200-250 : 6
+250+    : 27
+Criteria 1 : 52
+Criteria 2 : 39
+Criteria 3 : 22
