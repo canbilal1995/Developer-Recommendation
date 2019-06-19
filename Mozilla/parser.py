@@ -32,3 +32,13 @@ with open('Resources/thunderbird_resolution.xml','rt') as thunderbird_res:
     thunderbird_res_tree = ET.parse(thunderbird_res)
 with open('Resources/thunderbird_short_desc.xml','rt') as thunderbird_desc:
     thunderbird_desc_tree = ET.parse(thunderbird_desc)
+
+all_id = {}
+all_dev = {}
+all_desc = {}
+res_tree = [bugzilla_res_tree, core_res_tree, firefox_res_tree, thunderbird_res_tree]
+dev_tree = [bugzilla_dev_tree, core_dev_tree, firefox_dev_tree, thunderbird_dev_tree]
+desc_tree = [bugzilla_desc_tree, core_desc_tree, firefox_desc_tree, thunderbird_desc_tree]
+all_id01 = {}
+all_dev01 = {}
+all_desc01 = {}
