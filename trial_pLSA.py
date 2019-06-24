@@ -8,7 +8,7 @@ import sklearn
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 from sklearn.decomposition import NMF
 from sklearn.preprocessing import normalize
-
+from nltk.corpus import stopwords
 
 def print_top_words(model, feature_names, n_top_words):
     for topic_idx, topic in enumerate(model.components_):
@@ -32,9 +32,13 @@ if __name__ == "__main__":
             else:
                count_line += 1
                texts.append(row[3])
+    en_stop = set(stopwords.words('english')) #stopwords
+    en_stop.add('eclipse')
+    en_stop.add('error')
+    en_stop.add('project')
     tfidf_vectorizer = TfidfVectorizer(max_df=0.95, min_df=2,
                                    max_features=len(loaded_dict),
-                                   stop_words='english')
+                                   stop_words=en_stop)
     tfidf = tfidf_vectorizer.fit_transform(texts)
     tf_vectorizer = CountVectorizer(max_df=0.95, min_df=2,
                                 max_features=len(loaded_dict),
