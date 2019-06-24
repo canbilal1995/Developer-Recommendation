@@ -33,9 +33,7 @@ if __name__ == "__main__":
                count_line += 1
                texts.append(row[3])
     en_stop = set(stopwords.words('english')) #stopwords
-    en_stop.add('eclipse')
-    en_stop.add('error')
-    en_stop.add('project')
+    en_stop.add('crash')
     tfidf_vectorizer = TfidfVectorizer(max_df=0.95, min_df=2,
                                    max_features=len(loaded_dict),
                                    stop_words=en_stop)
