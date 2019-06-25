@@ -51,9 +51,16 @@ if __name__ == "__main__":
         
     dict_of_tokens = corpora.Dictionary() #Dictionary object is created
     corpus_of_tokens = [dict_of_tokens.doc2bow(doc, allow_update = True) for doc in tokens] #corpus is created
+
+    if not os.path.exists('TopicModelling'):
+        os.makedirs('TopicModelling')
+    dict_of_tokens.save('TopicModelling/myDict.dict')
+    corpora.MmCorpus.serialize('TopicModelling/myCorpus.mm', corpus_of_tokens)
+
     best_lda_model = []
     best_lsa_model = []
     for top_num in range(2,101):
+        #it can give memory error if you RAM is not sufficient. In this case, divide into some portions
         lda_model = LdaModel(corpus = corpus_of_tokens,
                              id2word = dict_of_tokens,
                              num_topics = top_num,
