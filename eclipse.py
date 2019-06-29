@@ -60,3 +60,14 @@ if __name__ == "__main__":
         for item in lda_model.print_topics(-1):
             print(item, file = lda_topics, flush = True)
     #lda_load_model = LdaModel.load('General/lda_model.model')
+
+    #LSA#
+    lsa_model = LsiModel(corpus = corpus_of_tokens,
+                             id2word = dict_of_tokens,
+                             num_topics = topic_number,
+                             decay = 0.5)
+    lsa_model.save('General/lsa_model.model')
+    #lsa_load_model = LsaModel.load('General/lsa_model.model')
+    with open('General/lsa_topics.txt', 'w') as lsa_topics:
+        print(*lsa_model.print_topics(-1), file = lsa_topics, sep = '\n', flush = True)
+    
