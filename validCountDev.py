@@ -1,6 +1,7 @@
 #@Author: Bilal CAN
 
 import csv
+import os
 
 dev_dict ={}
 with open('Results/arranged_data.csv', 'r') as arranged_data:
@@ -11,6 +12,7 @@ with open('Results/arranged_data.csv', 'r') as arranged_data:
             count_line += 1
             continue
         else:
+            #for counting work per years according to different developers
             count_line += 1
             key1 = row[2]
             key2 = (row[1])[:4]
@@ -104,3 +106,20 @@ Criteria 3 : %d"""%(dev_num,
                     len(criteria2),
                     len(criteria3)), flush=True, file=histogram)
     
+#CRITERIA 2 is chosen"
+if not os.path.exists('General'):
+    os.makedirs('General')
+rewrite = open('General/eclipse_learning_data.csv', 'w', newline = '')
+writer = csv.writer(rewrite, delimiter = '\t')
+writer.writerow(('id', 'time', 'developer', 'short_desc'))
+with open('Results/arranged_data.csv', 'r') as arranged_data:
+    reader = csv.reader(arranged_data, delimiter = '\t')
+    count_line = 0
+    for row in reader:
+        if count_line == 0:
+            count_line += 1
+            continue
+        else:
+            if row[2] in criteria2:
+                writer.writerow((row[0], row[1], row[2], row[3]))
+rewrite.close()
