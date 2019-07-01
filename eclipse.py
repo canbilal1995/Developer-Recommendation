@@ -26,6 +26,17 @@ def tokenizer(texts):
         tokens += [stemmed_sub_tokens]
     return tokens
 
+def topic_scoring(topics, topic_number):
+    score_vector = []
+    for topic in topics:
+        for index, score in topic:
+            while len(score_vector) < index:
+                score_vector.append(0)
+            score_vector.append(score)
+        while len(score_vector) < topic_number:
+            score_vector.append(0)
+    return score_vector
+
 if __name__ == "__main__":
     texts = []
     with open('Results/collected_data.csv', 'r') as collected_data:
@@ -77,13 +88,16 @@ if __name__ == "__main__":
         print(*lsa_model.print_topics(-1), file = lsa_topics, sep = '\n', flush = True)
     
 
-    #CALCULATING SCORES of EACHJOB DONE BY DEVELOPERS
-    developer_scores = open('General/eclipse_topic_scores.csv', 'w', newline = '\n')
+    #CALCULATING SCORES of EACH JOB DONE BY DEVELOPERS#
+    developer_scores = open('General/eclipse_topic_scores_lda.csv', 'w', newline = '\n')
+    developer_scores2 = open('General/eclipse_topic_scores_lsa.csv', 'w', newline = '\n')
     score_writer = csv.writer(developer_scores, delimiter = '\t')
+    score_writer2 = csv.writer(developer_scores2, delimiter = '\t')
     headers = ['id', 'time', 'developer', 'short_desc']
     for i in range(topic_number):
         headers.append('topic%d'%i)
     score_writer.writerow(headers)
+    score_writer2.writerow(headers)
     with open('General/eclipse_learning_data.csv', 'r') as developer_info:
         dev_reader = csv.reader(developer_info, delimiter = '\t')
         line_counter = False
@@ -91,20 +105,27 @@ if __name__ == "__main__":
             if line_counter is False:
                 line_counter = True
                 continue
-            score_vector = []
             my_text = [row[3].strip().split()]
             tokenized_text = tokenizer(my_text)
             bow_vector = [dict_of_tokens.doc2bow(doc, allow_update = False) for doc in tokenized_text]
-            #score calculation is below.
-            for topic in lda_model[bow_vector]:
-                for index, score in topic:
-                    while len(score_vector) < index:
-                        score_vector.append(0)
-                    score_vector.append(score)
-            while len(score_vector) < topic_number:
-                score_vector.append(0)
+            #score calculation for lda is below.
+            topics = lda_model[bow_vector]
+            score_vector = topic_scoring(topics, topic_number)
             #score calculation is over.
+            #lda data is started to write to the file.
             to_write_data = [row[0], row[1], row[2], row[3]]
             to_write_data.extend(score_vector)
             score_writer.writerow(to_write_data)
+            #lda data is written to the file.
+            
+            #score calculation for lsa is below.
+            topics = lsa_model[bow_vector]
+            score_vector = topic_scoring(topics, topic_number)
+            #score calculation is over.
+            #lsa data is started to write to the file.
+            to_write_data = [row[0], row[1], row[2], row[3]]
+            to_write_data.extend(score_vector)
+            score_writer2.writerow(to_write_data)
+            #lsa data is written to the file.
     developer_scores.close()
+    developer_scores2.close()
