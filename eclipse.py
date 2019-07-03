@@ -8,6 +8,8 @@ from gensim import corpora
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
+from sklearn.model_selection import StratifiedKFold
+import numpy as np
 
 def tokenizer(texts):
     tokens = []
@@ -129,3 +131,25 @@ if __name__ == "__main__":
             #lsa data is written to the file.
     developer_scores.close()
     developer_scores2.close()
+
+    #STRATIFIED K_FOLD CROSS VALIDATION#
+    with open('General/eclipse_topic_scores_lda.csv', 'r') as lda_dev_score:
+        dev_reader = csv.reader(lda_dev_score, delimiter = '\t')
+        line_counter = False
+        lda_X = []
+        lda_Y = []
+        for row in dev_reader:
+            if line_counter is  False:
+                line_counter = True
+                continue
+            sub_data = []
+            for i in range(4,len(row)):
+                sub_data.append(row[i])
+            lda_X.append(sub_data)
+            lda_Y.append([row[2]])
+        lda_X_np = np.asarray(lda_X)
+        lda_Y_np = np.asarray(lda_Y)
+        skf = StratifiedKFold(n_splits = 10)
+        skf.get_n_splits(lda_X_np, lda_Y_np)
+        for train, test in skf.split(lda_X_np, lda_Y_np):
+            print("%s %s" % (train, test))
