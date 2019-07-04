@@ -11,6 +11,7 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.model_selection import StratifiedKFold
 from sklearn.utils import shuffle
 from sklearn.svm import SVC
+from sklearn.metrics import multilabel_confusion_matrix
 import numpy as np
 
 def tokenizer(texts):
@@ -155,10 +156,48 @@ if __name__ == "__main__":
         skf = StratifiedKFold(n_splits = 10)
         skf.get_n_splits(lda_X_np, lda_Y_np)
 
-        prob_y = []
+        general_P = []
+        general_R = []
+        general_F1 = []
+        correct_rate = []
         for train, test in skf.split(lda_X_np, lda_Y_np):
+            prob_y = []   
             x_train, x_test = lda_X_np[train], lda_X_np[test]
             y_train, y_test = lda_Y_np[train], lda_Y_np[test]
             clf = SVC(kernel='sigmoid', gamma='scale', probability=True)
             clf.fit(x_train, y_train.reshape(len(y_train),1))
             prob_y.append(clf.predict_proba(x_test))
+            correct = 0
+            fail = 0
+            for my_test in range(len(prob_y[0])):
+                prob_dev = []
+                for i, p in enumerate(prob_y[0][my_test]):
+                    prob_dev.append([p, clf.classes_[i]])
+                prob_dev.sort(key=lambda a: a[0], reverse=True) #developers in order
+                top10 = []
+                for i in range(10):
+                    top10.append(prob_dev[i][1])
+                if y_test[my_test] in top10:
+                    correct += 1
+                else:
+                    fail += 1
+            correct_rate.append(correct/(correct+fail))
+            predicted = clf.predict(x_test)
+            mcm = multilabel_confusion_matrix(y_test, predicted)
+            P = []
+            R = []
+            F1 = []
+            for i in range(len(mcm)):
+                a = mcm[i]
+                TP = a[0][0]
+                FP = a[0][1]
+                FN = a[1][0]
+                TN = a[1][1]
+                Pi = TP/(TP+FP)
+                Ri = TP/(TP+FN)
+                P.append(Pi)
+                R.append(Ri)
+                F1.append(2*Pi*Ri/(Pi+Ri))
+            general_P.append(P)
+            general_R.append(R)
+            general_F1.append(F1)
