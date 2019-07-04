@@ -9,6 +9,8 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.model_selection import StratifiedKFold
+from sklearn.utils import shuffle
+from sklearn.svm import SVC
 import numpy as np
 
 def tokenizer(texts):
@@ -147,9 +149,16 @@ if __name__ == "__main__":
                 sub_data.append(row[i])
             lda_X.append(sub_data)
             lda_Y.append([row[2]])
+        lda_X, lda_Y = shuffle(lda_X, lda_Y)
         lda_X_np = np.asarray(lda_X)
         lda_Y_np = np.asarray(lda_Y)
         skf = StratifiedKFold(n_splits = 10)
         skf.get_n_splits(lda_X_np, lda_Y_np)
+
+        prob_y = []
         for train, test in skf.split(lda_X_np, lda_Y_np):
-            print("%s %s" % (train, test))
+            x_train, x_test = lda_X_np[train], lda_X_np[test]
+            y_train, y_test = lda_Y_np[train], lda_Y_np[test]
+            clf = SVC(kernel='sigmoid', gamma='scale', probability=True)
+            clf.fit(x_train, y_train.reshape(len(y_train),1))
+            prob_y.append(clf.predict_proba(x_test))
