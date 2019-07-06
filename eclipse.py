@@ -11,7 +11,7 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.model_selection import StratifiedKFold
 from sklearn.utils import shuffle
 from sklearn.svm import SVC
-from sklearn.metrics import multilabel_confusion_matrix
+from sklearn.metrics import multilabel_confusion_matrix, classification_report, confusion_matrix
 import numpy as np
 
 def tokenizer(texts):
@@ -42,6 +42,23 @@ def topic_scoring(topics, topic_number):
             score_vector.append(0)
     return score_vector
 
+def ml_reader(my_file):
+    with open(my_file, 'r') as lda_dev_score:
+        dev_reader = csv.reader(lda_dev_score, delimiter = '\t')
+        line_counter = False
+        X = []
+        Y = []
+        for row in dev_reader:
+            if line_counter is  False:
+                line_counter = True
+                continue
+            sub_data = []
+            for i in range(4,len(row)):
+                sub_data.append(row[i])
+            X.append(sub_data)
+            Y.append([row[2]])
+    return X, Y
+
 if __name__ == "__main__":
     texts = []
     with open('Results/collected_data.csv', 'r') as collected_data:
@@ -69,7 +86,7 @@ if __name__ == "__main__":
     #loaded_corpus = corpora.MmCorpus('General/myCorpus.mm')
 
     #LDA#
-    topic_number = 60
+    topic_number = 10
     lda_model = LdaModel(corpus = corpus_of_tokens,
                              id2word = dict_of_tokens,
                              num_topics = topic_number,
@@ -135,69 +152,132 @@ if __name__ == "__main__":
     developer_scores.close()
     developer_scores2.close()
 
-    #STRATIFIED K_FOLD CROSS VALIDATION#
-    with open('General/eclipse_topic_scores_lda.csv', 'r') as lda_dev_score:
-        dev_reader = csv.reader(lda_dev_score, delimiter = '\t')
-        line_counter = False
-        lda_X = []
-        lda_Y = []
-        for row in dev_reader:
-            if line_counter is  False:
-                line_counter = True
-                continue
-            sub_data = []
-            for i in range(4,len(row)):
-                sub_data.append(row[i])
-            lda_X.append(sub_data)
-            lda_Y.append([row[2]])
-        lda_X, lda_Y = shuffle(lda_X, lda_Y)
-        lda_X_np = np.asarray(lda_X)
-        lda_Y_np = np.asarray(lda_Y)
-        skf = StratifiedKFold(n_splits = 10)
-        skf.get_n_splits(lda_X_np, lda_Y_np)
+    #STRATIFIED K_FOLD CROSS VALIDATION FOR LDA DATA#
+    lda_X, lda_Y = ml_reader('General/eclipse_topic_scores_lda.csv')
+    lda_X, lda_Y = shuffle(lda_X, lda_Y)
+    lda_X_np = np.asarray(lda_X)
+    lda_Y_np = np.asarray(lda_Y)
+    skf = StratifiedKFold(n_splits = 10)
+    skf.get_n_splits(lda_X_np, lda_Y_np)
 
-        general_P = []
-        general_R = []
-        general_F1 = []
-        correct_rate = []
-        for train, test in skf.split(lda_X_np, lda_Y_np):
-            prob_y = []   
-            x_train, x_test = lda_X_np[train], lda_X_np[test]
-            y_train, y_test = lda_Y_np[train], lda_Y_np[test]
-            clf = SVC(kernel='sigmoid', gamma='scale', probability=True)
-            clf.fit(x_train, y_train.reshape(len(y_train),1))
-            prob_y.append(clf.predict_proba(x_test))
-            correct = 0
-            fail = 0
-            for my_test in range(len(prob_y[0])):
-                prob_dev = []
-                for i, p in enumerate(prob_y[0][my_test]):
-                    prob_dev.append([p, clf.classes_[i]])
-                prob_dev.sort(key=lambda a: a[0], reverse=True) #developers in order
-                top10 = []
-                for i in range(10):
-                    top10.append(prob_dev[i][1])
-                if y_test[my_test] in top10:
-                    correct += 1
-                else:
-                    fail += 1
-            correct_rate.append(correct/(correct+fail))
-            predicted = clf.predict(x_test)
-            mcm = multilabel_confusion_matrix(y_test, predicted)
-            P = []
-            R = []
-            F1 = []
-            for i in range(len(mcm)):
-                a = mcm[i]
-                TP = a[0][0]
-                FP = a[0][1]
-                FN = a[1][0]
-                TN = a[1][1]
-                Pi = TP/(TP+FP)
-                Ri = TP/(TP+FN)
-                P.append(Pi)
-                R.append(Ri)
-                F1.append(2*Pi*Ri/(Pi+Ri))
-            general_P.append(P)
-            general_R.append(R)
-            general_F1.append(F1)
+    #SVM FOR LDA DATA
+    #Rrecall = []
+    #Pprecision = []
+    general_P = []
+    general_R = []
+    correct_rate = []
+    for train, test in skf.split(lda_X_np, lda_Y_np):
+        prob_y = []   
+        x_train, x_test = lda_X_np[train], lda_X_np[test]
+        y_train, y_test = lda_Y_np[train], lda_Y_np[test]
+        clf = SVC(gamma='scale', probability=True, decision_function_shape='ovo')
+        clf.fit(x_train, y_train.reshape(len(y_train),1))
+        prob_y.append(clf.predict_proba(x_test))
+        correct = 0
+        fail = 0
+        for my_test in range(len(prob_y[0])):
+            prob_dev = []
+            for i, p in enumerate(prob_y[0][my_test]):
+                prob_dev.append([p, clf.classes_[i]])
+            prob_dev.sort(key=lambda a: a[0], reverse=True) #developers in order
+            top10 = []
+            for i in range(10):
+                top10.append(prob_dev[i][1])
+            if y_test[my_test] in top10:
+                correct += 1
+            else:
+                fail += 1
+        correct_rate.append(correct/(correct+fail))
+        predicted = clf.predict(x_test)
+        mcm = multilabel_confusion_matrix(y_test, predicted)
+        P = []
+        R = []
+        F1 = []
+        for i in range(len(mcm)):
+            a = mcm[i]
+            TP = a[0][0]
+            FP = a[0][1]
+            FN = a[1][0]
+            TN = a[1][1]
+            Pi = TP/(TP+FP)
+            Ri = TP/(TP+FN)
+            P.append(Pi)
+            R.append(Ri)
+        general_P.append(sum(P)/len(P))
+        general_R.append(sum(R)/len(R))
+            #print(classification_report(y_test, predicted))
+            #cm = confusion_matrix(y_test, predicted)
+            #recall = np.diag(cm) / np.sum(cm, axis = 1)
+            #precision = np.diag(cm) / np.sum(cm, axis = 0)
+            #Pprecision.append(precision)
+            #Rrecall.append(recall)
+    eclipse_results = open('General/eclipse_results.txt', 'a')
+    precision = np.mean(general_P)
+    recall = np.mean(general_R)
+    F1 = 2*precision*recall/(precision+recall)
+    print('LDA', file = eclipse_results)
+    print('Precision is', precision, file = eclipse_results)
+    print('Recall is', recall, file = eclipse_results)
+    print('F1 score is', F1, file = eclipse_results)
+    eclipse_results.close()
+
+    #STRATIFIED K_FOLD CROSS VALIDATION FOR LSA DATA#
+    lsa_X, lsa_Y = ml_reader('General/eclipse_topic_scores_lsa.csv')
+    lsa_X, lsa_Y = shuffle(lsa_X, lsa_Y)
+    lsa_X_np = np.asarray(lsa_X)
+    lsa_Y_np = np.asarray(lsa_Y)
+    skf = StratifiedKFold(n_splits = 10)
+    skf.get_n_splits(lsa_X_np, lsa_Y_np)
+
+    #SVM FOR LSA DATA
+    general_P = []
+    general_R = []
+    correct_rate = []
+    for train, test in skf.split(lsa_X_np, lsa_Y_np):
+        prob_y = []   
+        x_train, x_test = lsa_X_np[train], lsa_X_np[test]
+        y_train, y_test = lsa_Y_np[train], lsa_Y_np[test]
+        clf = SVC(gamma='scale', probability=True, decision_function_shape='ovo')
+        clf.fit(x_train, y_train.reshape(len(y_train),1))
+        prob_y.append(clf.predict_proba(x_test))
+        correct = 0
+        fail = 0
+        for my_test in range(len(prob_y[0])):
+            prob_dev = []
+            for i, p in enumerate(prob_y[0][my_test]):
+                prob_dev.append([p, clf.classes_[i]])
+            prob_dev.sort(key=lambda a: a[0], reverse=True) #developers in order
+            top10 = []
+            for i in range(10):
+                top10.append(prob_dev[i][1])
+            if y_test[my_test] in top10:
+                correct += 1
+            else:
+                fail += 1
+        correct_rate.append(correct/(correct+fail))
+        predicted = clf.predict(x_test)
+        mcm = multilabel_confusion_matrix(y_test, predicted)
+        P = []
+        R = []
+        F1 = []
+        for i in range(len(mcm)):
+            a = mcm[i]
+            TP = a[0][0]
+            FP = a[0][1]
+            FN = a[1][0]
+            TN = a[1][1]
+            Pi = TP/(TP+FP)
+            Ri = TP/(TP+FN)
+            P.append(Pi)
+            R.append(Ri)
+        general_P.append(sum(P)/len(P))
+        general_R.append(sum(R)/len(R))
+    eclipse_results = open('General/eclipse_results.txt', 'a')
+    precision = np.mean(general_P)
+    recall = np.mean(general_R)
+    F1 = 2*precision*recall/(precision+recall)
+    print('LSA', file = eclipse_results)
+    print('Precision is', precision, file = eclipse_results)
+    print('Recall is', recall, file = eclipse_results)
+    print('F1 score is', F1, file = eclipse_results)
+    eclipse_results.close()
