@@ -13,6 +13,11 @@ from sklearn.utils import shuffle
 from sklearn.svm import SVC
 from sklearn.metrics import multilabel_confusion_matrix, classification_report, confusion_matrix
 import numpy as np
+import sys
+import warnings
+
+if not sys.warnoptions:
+    warnings.simplefilter("ignore")
 
 def tokenizer(texts):
     tokens = []
@@ -86,7 +91,7 @@ if __name__ == "__main__":
     #loaded_corpus = corpora.MmCorpus('General/myCorpus.mm')
 
     #LDA#
-    topic_number = 10
+    topic_number = 60
     lda_model = LdaModel(corpus = corpus_of_tokens,
                              id2word = dict_of_tokens,
                              num_topics = topic_number,
@@ -211,7 +216,7 @@ if __name__ == "__main__":
             #precision = np.diag(cm) / np.sum(cm, axis = 0)
             #Pprecision.append(precision)
             #Rrecall.append(recall)
-    eclipse_results = open('General/eclipse_results.txt', 'a')
+    eclipse_results = open('General/eclipse_results.txt', 'w')
     precision = np.mean(general_P)
     recall = np.mean(general_R)
     F1 = 2*precision*recall/(precision+recall)
@@ -221,6 +226,9 @@ if __name__ == "__main__":
     print('F1 score is', F1, file = eclipse_results)
     eclipse_results.close()
 
+    print(prob_dev)
+    print(top10)
+    
     #STRATIFIED K_FOLD CROSS VALIDATION FOR LSA DATA#
     lsa_X, lsa_Y = ml_reader('General/eclipse_topic_scores_lsa.csv')
     lsa_X, lsa_Y = shuffle(lsa_X, lsa_Y)
