@@ -171,6 +171,8 @@ if __name__ == "__main__":
     general_P = []
     general_R = []
     correct_rate = []
+    confusion_matrices = []
+    fold_num = 0
     for train, test in skf.split(lda_X_np, lda_Y_np):
         prob_y = []   
         x_train, x_test = lda_X_np[train], lda_X_np[test]
@@ -198,6 +200,9 @@ if __name__ == "__main__":
         P = []
         R = []
         F1 = []
+        if len(confusion_matrices) == 0:
+            for i in range(len(mcm)):
+                confusion_matrices.append([[0,0],[0,0]])
         for i in range(len(mcm)):
             a = mcm[i]
             TP = a[0][0]
@@ -208,14 +213,24 @@ if __name__ == "__main__":
             Ri = TP/(TP+FN)
             P.append(Pi)
             R.append(Ri)
+            confusion_matrices[i][0][0] += TP
+            confusion_matrices[i][0][1] += FP
+            confusion_matrices[i][1][0] += FN
+            confusion_matrices[i][1][1] += TN
         general_P.append(sum(P)/len(P))
         general_R.append(sum(R)/len(R))
-            #print(classification_report(y_test, predicted))
-            #cm = confusion_matrix(y_test, predicted)
-            #recall = np.diag(cm) / np.sum(cm, axis = 1)
-            #precision = np.diag(cm) / np.sum(cm, axis = 0)
-            #Pprecision.append(precision)
-            #Rrecall.append(recall)
+        if(fold_num == 0):
+            lda_svm = open('General/eclipse_lda_svm_confusion.txt', 'w')
+            print((fold_num+1), file = lda_svm)
+            print(confusion_matrices, file = lda_svm)
+            lda_svm.close()
+        else:
+            lda_svm = open('General/eclipse_lda_svm_confusion.txt', 'a')
+            print((fold_num+1), file = lda_svm)
+            print(confusion_matrices, file = lda_svm)
+            lda_svm.close()
+        print('fold_no_lda:', fold_num)
+        fold_num +=1
     eclipse_results = open('General/eclipse_results.txt', 'w')
     precision = np.mean(general_P)
     recall = np.mean(general_R)
@@ -226,8 +241,7 @@ if __name__ == "__main__":
     print('F1 score is', F1, file = eclipse_results)
     eclipse_results.close()
 
-    print(prob_dev)
-    print(top10)
+
     
     #STRATIFIED K_FOLD CROSS VALIDATION FOR LSA DATA#
     lsa_X, lsa_Y = ml_reader('General/eclipse_topic_scores_lsa.csv')
@@ -241,6 +255,8 @@ if __name__ == "__main__":
     general_P = []
     general_R = []
     correct_rate = []
+    confusion_matrices2 = []
+    fold_num = 0
     for train, test in skf.split(lsa_X_np, lsa_Y_np):
         prob_y = []   
         x_train, x_test = lsa_X_np[train], lsa_X_np[test]
@@ -268,6 +284,9 @@ if __name__ == "__main__":
         P = []
         R = []
         F1 = []
+        if len(confusion_matrices2) == 0:
+            for i in range(len(mcm)):
+                confusion_matrices2.append([[0,0],[0,0]])
         for i in range(len(mcm)):
             a = mcm[i]
             TP = a[0][0]
@@ -278,8 +297,24 @@ if __name__ == "__main__":
             Ri = TP/(TP+FN)
             P.append(Pi)
             R.append(Ri)
+            confusion_matrices2[i][0][0] += TP
+            confusion_matrices2[i][0][1] += FP
+            confusion_matrices2[i][1][0] += FN
+            confusion_matrices2[i][1][1] += TN
         general_P.append(sum(P)/len(P))
         general_R.append(sum(R)/len(R))
+        if(fold_num == 0):
+            lsa_svm = open('General/eclipse_lsa_svm_confusion.txt', 'w')
+            print((fold_num+1), file = lsa_svm)
+            print(confusion_matrices2, file = lsa_svm)
+            lsa_svm.close()
+        else:
+            lsa_svm = open('General/eclipse_lsa_svm_confusion.txt', 'a')
+            print((fold_num+1), file = lsa_svm)
+            print(confusion_matrices2, file = lsa_svm)
+            lsa_svm.close()
+        print('fold_no_lsa:', fold_num)
+        fold_num +=1
     eclipse_results = open('General/eclipse_results.txt', 'a')
     precision = np.mean(general_P)
     recall = np.mean(general_R)
