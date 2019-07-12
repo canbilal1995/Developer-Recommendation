@@ -17,3 +17,24 @@ LSA Precision for classes:
 [0.9683844451470124, 0.9996175323185191, 0.9465575349061146, 0.8891242362525458, 0.9427247014456317, 0.9969176234877091, 0.9569721115537848, 0.9965938999845178, 0.9999234303215927, 0.9997708349247575, 0.9745383104125737, 0.9880068090374498, 0.9989287627209427, 0.9488390712570056, 0.9845034045550599, 1.0, 1.0, 0.999923424458228, 0.9848695383665277, 0.978125, 0.9932147870846981, 0.9957337883959044, 0.9950896336710834, 0.9998471882640587, 0.9996144057993368, 0.9995378215991373, 1.0, 0.9976803525864069, 0.941948310139165, 0.9885021263191054, 0.9988473951129553, 0.8463522773075373, 0.9851875196974472, 0.9969308677971304, 0.9730092336832137, 1.0, 0.9842261439950023, 0.9990759990759991, 0.9988462425967233]
 LSA Recall for classes:
 [0.9677725118483412, 0.9911262798634812, 0.9567685943709953, 0.9642194540153723, 0.9769581501384139, 0.9850757633442473, 0.9680019343918755, 0.98125, 0.990068233510235, 0.9924926063547433, 0.9714845280062672, 0.9885422311682279, 0.9913433062495254, 0.9624005197336365, 0.971426364970268, 0.9919648271679806, 0.9910538286580743, 0.9900674804761543, 0.9860874942031226, 0.9759900218272529, 0.9815785416987822, 0.9781316671746418, 0.9825303986455287, 0.9921152388172858, 0.9833105750265514, 0.9840740178977704, 0.9906761673741662, 0.9816646378575776, 0.9820910372274273, 0.9636112390603409, 0.9870159453302961, 0.9732109751575825, 0.9702801272600294, 0.9894151690526957, 0.9745474666034306, 0.9921922377198302, 0.9807797058594662, 0.9862420188507145, 0.9888068225081855]
+
+Classes:
+array(['Boris_Bokowski@ca.ibm.com', 'Carolyn_MacLeod@ca.ibm.com',
+       'Michael_Rennie@ca.ibm.com', 'Olivier_Thomann@ca.ibm.com',
+       'Silenio_Quarti@ca.ibm.com', 'Szymon.Brandys@pl.ibm.com',
+       'Tod_Creasey@ca.ibm.com', 'Tomasz.Zarna@pl.ibm.com',
+       'angvoz.dev@gmail.com', 'ankur_sharma@in.ibm.com',
+       'anton.leherbauer@windriver.com', 'cgold@us.ibm.com',
+       'curtispd@ca.ibm.com', 'cwindatt@ca.ibm.com',
+       'daniel_megert@ch.ibm.com', 'duongn@ca.ibm.com',
+       'eclipse.sprigogin@gmail.com', 'elaskavaia.cdt@gmail.com',
+       'emoffatt@ca.ibm.com', 'felipe_heidrich@ca.ibm.com',
+       'frederic_fusier@fr.ibm.com', 'gheorghe@ca.ibm.com',
+       'grant_gayed@ca.ibm.com', 'jamesblackburn+eclipse@gmail.com',
+       'jerome_lanneluc@fr.ibm.com', 'john_arthorne@ca.ibm.com',
+       'ken.ryall@nokia.com', 'kim_horne@ca.ibm.com', 'kmoir@ca.ibm.com',
+       'krbarnes@ca.ibm.com', 'marc.khouzam@ericsson.com',
+       'markus.schorn@windriver.com', 'markus_keller@ch.ibm.com',
+       'pawel.piech@windriver.com', 'pwebster@ca.ibm.com',
+       's.kovatch@us.ibm.com', 'steve_northover@ca.ibm.com',
+       'susan_franklin@us.ibm.com', 'vivkong@ca.ibm.com'], dtype='<U32')
