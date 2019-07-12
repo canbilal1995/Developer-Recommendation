@@ -19,6 +19,7 @@ def print_top_words(model, feature_names, n_top_words):
     print()
     
 if __name__ == "__main__":
+    topic_number = 10
     loaded_dict = corpora.Dictionary.load('TopicModelling/myDict.dict')
     loaded_corpus = corpora.MmCorpus('TopicModelling/myCorpus.mm')
     texts = []
@@ -44,7 +45,7 @@ if __name__ == "__main__":
                                 max_features=len(loaded_dict),
                                 stop_words=en_stop)
     tf = tf_vectorizer.fit_transform(texts)
-    nmf = NMF(n_components=10, random_state=1,
+    nmf = NMF(n_components=topic_number, random_state=1,
           alpha=.1, l1_ratio=.5).fit(tfidf)
     tfidf_feature_names = tfidf_vectorizer.get_feature_names()
     print_top_words(nmf, tfidf_feature_names, 20)
@@ -52,11 +53,31 @@ if __name__ == "__main__":
       "tf-idf features, n_samples=%d and n_features=%d..."
       % (len(texts), len(loaded_dict)))
 
-    nmf = NMF(n_components=10, random_state=1,
+    nmf = NMF(n_components=topic_number, random_state=1,
           beta_loss='kullback-leibler', solver='mu', max_iter=1000, alpha=.1,
           l1_ratio=.5).fit(tfidf)
 
-
+    scores_per_document = nmf.transform(tfidf)
+    write_scores = open('General/NMFscores.csv', 'w', newline = '\n')
+    score_writer = csv.writer(write_scores, delimiter = '\t')
+    headers = ['id', 'time', 'developer', 'short_desc']
+    for i in range(topic_number):
+        headers.append('topic%d'%i)
+    score_writer.writerow(headers)
+    with open('General/eclipse_learning_data.csv', 'r') as developer_info:
+        dev_reader = csv.reader(developer_info, delimiter ='\t')
+        line_counter = 0
+        line_counter2 = False
+        for row in dev_reader:
+            if line_counter2 is False:
+                line_counter2 = True
+                continue
+            to_write_data = [row[0], row[1], row[2], row[3]]
+            for i in range(topic_number):
+                to_write_data.append(scores_per_document[line_counter][i])
+            score_writer.writerow(to_write_data)
+            line_counter += 1
+    write_scores.close()
     print("\nTopics in NMF model (generalized Kullback-Leibler divergence):")
     tfidf_feature_names = tfidf_vectorizer.get_feature_names()
     print_top_words(nmf, tfidf_feature_names, 20)
