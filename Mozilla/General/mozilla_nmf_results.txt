@@ -1,0 +1,33 @@
+NMF
+Precision is 0.9824155648784044
+Recall is 0.9825377139628861
+F1 score is 0.9824766356240159
+
+Precision for classes:
+[0.9390350202532943, 0.998820815175596, 1.0, 1.0, 1.0, 1.0, 1.0, 0.9997969646210852, 0.9999486230990546, 0.7325433770630554, 1.0, 0.9676529204353825, 1.0, 0.9723759737597376, 1.0, 1.0, 1.0, 1.0, 0.8852160333159813, 0.9959969597162401, 0.9316900686686481, 1.0, 1.0, 0.9998986726112068, 1.0, 1.0, 1.0, 0.9993937556835405, 0.9851062755591458, 1.0, 0.9991330069359445, 1.0, 0.9932818103753094, 0.9997977243994943, 0.9999490523741593, 1.0, 1.0, 0.9974248927038627, 1.0, 1.0, 0.9992367577469089, 0.9992828970957333, 1.0, 0.9888181394626495, 1.0, 0.7423872679045093, 1.0, 1.0, 0.9362388183898481, 0.9882871919683602, 1.0, 0.9999487888564552, 0.9993872236123168, 0.9997962198787508]
+Recall for classes:
+[0.9838302444265378, 0.9740512974351282, 0.9899136166175663, 0.9863184700654117, 0.9899136166175663, 0.9877165826134718, 0.9872671892944525, 0.9837187234680118, 0.9718865474882653, 0.9558255107675317, 0.9899635492085684, 0.9794651631924688, 0.9897638188445599, 0.9763791683820502, 0.9883157737054976, 0.989464223298547, 0.9898636840265641, 0.9849702901083537, 0.9634015069967707, 0.9856584093872229, 0.9787360034453058, 0.9820741998302291, 0.987766515204474, 0.9855680399500624, 0.988116043341489, 0.9852698856543666, 0.9869176611574375, 0.988408114319976, 0.9904065783462769, 0.9850202226993559, 0.9791094007696537, 0.9827732561042593, 0.9907794628911171, 0.987809143142643, 0.9800759013282733, 0.9807759524641734, 0.9851700204723624, 0.9890351975166475, 0.9886653018425126, 0.9885654366605083, 0.9813112132720367, 0.9748650809514291, 0.9858191441553902, 0.9647944236791595, 0.9893643581165427, 0.9533346958239662, 0.9882658411144954, 0.9878164477954761, 0.9638076881893136, 0.9862868130755996, 0.9896639536625556, 0.9750324578048537, 0.9778166375218587, 0.9801228587124806]
+
+Classes:
+array(['LpSolit@gmail.com', 'Olli.Pettay@gmail.com',
+       'bas.schouten@live.nl', 'benjamin@smedbergs.us',
+       'bent.mozilla@gmail.com', 'bhackett1024@gmail.com',
+       'bienvenu@nventure.com', 'bjacob@mozilla.com',
+       'brendan@mozilla.org', 'bzbarsky@mit.edu', 'chris@pearce.org.nz',
+       'dao@mozilla.com', 'dbaron@dbaron.org', 'dholbert@mozilla.com',
+       'dietrich@mozilla.com', 'dmandelin@mozilla.com',
+       'doug.turner@gmail.com', 'dvander@alliedmods.net',
+       'ehsan@mozilla.com', 'enndeakin@gmail.com', 'gal@uci.edu',
+       'gavin.sharp@gmail.com', 'ginn.chen@oracle.com', 'hsivonen@iki.fi',
+       'igor@mir2.org', 'jfkthame@gmail.com', 'jmathies@mozilla.com',
+       'jmuizelaar@mozilla.com', 'jonas@sicking.cc',
+       'jones.chris.g@gmail.com', 'jorendorff@mozilla.com',
+       'joshmoz@gmail.com', 'justin.lebar+bug@gmail.com',
+       'jwalden+bmo@mit.edu', 'longsonr@gmail.com', 'mak77@bonardo.net',
+       'mano@mozilla.com', 'masayuki@d-toybox.com', 'matspal@gmail.com',
+       'matt.woodrow@gmail.com', 'mh+mozilla@glandium.org',
+       'mkanat@bugzilla.org', 'mounir@lamouri.fr', 'mrbkap@gmail.com',
+       'neil@httl.net', 'nobody@mozilla.org', 'peterv@propagandism.org',
+       'philringnalda@gmail.com', 'roc@ocallahan.org', 'romaxa@gmail.com',
+       'smontagu@smontagu.org', 'surkov.alexander@gmail.com',
+       'timeless@bemail.org', 'vladimir@pobox.com'], dtype='<U26')
