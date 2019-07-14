@@ -81,7 +81,9 @@ if __name__ == "__main__":
     nmf = NMF(n_components=topic_number, random_state=1,
           beta_loss='kullback-leibler', solver='mu', max_iter=1000, alpha=.1,
           l1_ratio=.5).fit(tfidf)
-
+    W = nmf.fit_transform(tfidf)
+    H = nmf.components_
+    
     scores_per_document = nmf.transform(tfidf)
     write_scores = open('General/NMFscores.csv', 'w', newline = '\n')
     score_writer = csv.writer(write_scores, delimiter = '\t')
@@ -99,7 +101,7 @@ if __name__ == "__main__":
                 continue
             to_write_data = [row[0], row[1], row[2], row[3]]
             for i in range(topic_number):
-                to_write_data.append(scores_per_document[line_counter][i])
+                to_write_data.append(W[line_counter][i])
             score_writer.writerow(to_write_data)
             line_counter += 1
     write_scores.close()

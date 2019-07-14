@@ -17,3 +17,26 @@ Precision after LSA:
 Recall after LSA:
 [0.9817376437674852, 0.9796635767107593, 0.9899577827183933, 0.9865862509071799, 0.9900997524938123, 0.9882865295089353, 0.9896601172356537, 0.9848606982719532, 0.9776264339539581, 0.9560390366192139, 0.99000999000999, 0.9869870648313762, 0.9897635632786558, 0.9821647274954072, 0.9889636877799745, 0.9897767890619141, 0.9900564632988558, 0.9892035398230089, 0.9649856976374616, 0.9860529286341402, 0.9848678880380525, 0.9836395164735744, 0.9890415768092683, 0.9879463270411645, 0.9881882881758022, 0.9865781933343387, 0.9875447961306167, 0.9886030608922175, 0.9890867317633544, 0.9856412569538415, 0.9810604142401378, 0.9844801088407952, 0.9886602058147667, 0.9874597187179935, 0.9855238385997048, 0.9851218578537706, 0.9865252149429333, 0.9889141344785398, 0.9887354197367435, 0.9887031066456724, 0.9848257249789953, 0.983782677648744, 0.9869336670838548, 0.9678283491744585, 0.9896819646738452, 0.9501046755059316, 0.9883851629823904, 0.9878633503146539, 0.966968552794867, 0.985403656609736, 0.9896868601108725, 0.9810694968874375, 0.9830347518094553, 0.980907220633248]
 
+Classes:
+array(['LpSolit@gmail.com', 'Olli.Pettay@gmail.com',
+       'bas.schouten@live.nl', 'benjamin@smedbergs.us',
+       'bent.mozilla@gmail.com', 'bhackett1024@gmail.com',
+       'bienvenu@nventure.com', 'bjacob@mozilla.com',
+       'brendan@mozilla.org', 'bzbarsky@mit.edu', 'chris@pearce.org.nz',
+       'dao@mozilla.com', 'dbaron@dbaron.org', 'dholbert@mozilla.com',
+       'dietrich@mozilla.com', 'dmandelin@mozilla.com',
+       'doug.turner@gmail.com', 'dvander@alliedmods.net',
+       'ehsan@mozilla.com', 'enndeakin@gmail.com', 'gal@uci.edu',
+       'gavin.sharp@gmail.com', 'ginn.chen@oracle.com', 'hsivonen@iki.fi',
+       'igor@mir2.org', 'jfkthame@gmail.com', 'jmathies@mozilla.com',
+       'jmuizelaar@mozilla.com', 'jonas@sicking.cc',
+       'jones.chris.g@gmail.com', 'jorendorff@mozilla.com',
+       'joshmoz@gmail.com', 'justin.lebar+bug@gmail.com',
+       'jwalden+bmo@mit.edu', 'longsonr@gmail.com', 'mak77@bonardo.net',
+       'mano@mozilla.com', 'masayuki@d-toybox.com', 'matspal@gmail.com',
+       'matt.woodrow@gmail.com', 'mh+mozilla@glandium.org',
+       'mkanat@bugzilla.org', 'mounir@lamouri.fr', 'mrbkap@gmail.com',
+       'neil@httl.net', 'nobody@mozilla.org', 'peterv@propagandism.org',
+       'philringnalda@gmail.com', 'roc@ocallahan.org', 'romaxa@gmail.com',
+       'smontagu@smontagu.org', 'surkov.alexander@gmail.com',
+       'timeless@bemail.org', 'vladimir@pobox.com'], dtype='<U26')
